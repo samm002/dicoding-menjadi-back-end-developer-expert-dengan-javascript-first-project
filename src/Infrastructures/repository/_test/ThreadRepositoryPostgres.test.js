@@ -7,6 +7,7 @@ const DetailThread = require('../../../Domains/threads/entities/DetailThread');
 const RegisterUser = require('../../../Domains/users/entities/RegisterUser');
 const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper');
 const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper');
+const NotFoundError = require('../../../Commons/exceptions/NotFoundError');
 
 describe('ThreadRepositoryPostgres', () => {
   afterEach(async () => {
@@ -160,5 +161,22 @@ describe('ThreadRepositoryPostgres', () => {
       expect(threadDetail).toBeDefined();
       expect(threadDetail).toStrictEqual(expectedCreatedThread);
     });
+  });
+
+  it('should return not found when viewing invalid thread', async () => {
+    // Arrange
+    const threadFakeIdGenerator = jest.fn(() => 'thread-123'); // mock
+    const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {
+      generateId: threadFakeIdGenerator,
+    });
+
+    // Action & Assert
+    await expect(
+      threadRepositoryPostgres.viewThreadById('thread-456')
+    ).rejects.toThrowError(NotFoundError);
+
+    const threads = await ThreadsTableTestHelper.findThreadsById('thread-456');
+
+    expect(threads).toHaveLength(0);
   });
 });

@@ -1,35 +1,49 @@
 const ViewThreadByIdUseCase = require('../ViewThreadByIdUseCase');
-const CreateThread = require('../../../../Domains/threads/entities/CreateThread');
-const CreatedThread = require('../../../../Domains/threads/entities/CreatedThread');
 const DetailThread = require('../../../../Domains/threads/entities/DetailThread');
 const ThreadRepository = require('../../../../Domains/threads/ThreadRepository');
 
 describe('ViewThreadByIdUseCase', () => {
-  /**
-   * Menguji apakah use case mampu mengoskestrasikan langkah demi langkah dengan benar.
-   */
   it('should view thread detail correctly', async () => {
     // Arrange
-    const mockCreatedThread = new DetailThread([
+    // Raw data that would come from the repository
+    const mockThreadData = [
       {
         id: 'thread-123',
         title: 'Thread 1',
         body: 'Isi dari Thread 1',
         updated_at: '2025-01-08 10:30:26.511437',
         username: 'dicoding',
-        comments: [],
+        comment_id: null,
+        comment_username: null,
+        comment_date: null,
+        content: null,
+        is_deleted: null,
+        parent_comment_id: null,
+      },
+    ];
+
+    // Expected DetailThread instance that should be returned by use case
+    const expectedDetailThread = new DetailThread([
+      {
+        id: 'thread-123',
+        title: 'Thread 1',
+        body: 'Isi dari Thread 1',
+        updated_at: '2025-01-08 10:30:26.511437',
+        username: 'dicoding',
+        comment_id: null,
+        comment_username: null,
+        comment_date: null,
+        content: null,
+        is_deleted: null,
+        parent_comment_id: null,
       },
     ]);
 
-    /** creating dependency of use case */
     const mockThreadRepository = new ThreadRepository();
-
-    /** mocking needed function */
     mockThreadRepository.viewThreadById = jest
       .fn()
-      .mockImplementation(() => Promise.resolve(mockCreatedThread));
+      .mockImplementation(() => Promise.resolve(mockThreadData));
 
-    /** creating use case instance */
     const viewThreadByIdUseCase = new ViewThreadByIdUseCase({
       threadRepository: mockThreadRepository,
     });
@@ -39,6 +53,6 @@ describe('ViewThreadByIdUseCase', () => {
 
     // Assert
     expect(viewThreadById).toBeDefined();
-    expect(viewThreadById).toStrictEqual(mockCreatedThread);
+    expect(new DetailThread(viewThreadById)).toStrictEqual(expectedDetailThread);
   });
 });

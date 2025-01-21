@@ -16,12 +16,6 @@ describe('CreateReplyCommentUseCase', () => {
       parent_comment_id: 'comment-123',
     });
 
-    const mockCreatedReply = new CreatedComment({
-      id: 'reply-123',
-      content: useCasePayload.content,
-      user_id: useCasePayload.user_id,
-    });
-
     /** creating dependency of use case */
     const mockCommentRepository = new CommentRepository();
 
@@ -34,9 +28,15 @@ describe('CreateReplyCommentUseCase', () => {
       .fn()
       .mockImplementation(() => Promise.resolve());
 
-    mockCommentRepository.createReply = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve(mockCreatedReply));
+    mockCommentRepository.createReply = jest.fn().mockImplementation(() =>
+      Promise.resolve(
+        new CreatedComment({
+          id: 'reply-123',
+          content: useCasePayload.content,
+          user_id: useCasePayload.user_id,
+        })
+      )
+    );
 
     /** creating use case instance */
     const createReplyCommentUseCase = new CreateReplyCommentUseCase({
@@ -49,7 +49,13 @@ describe('CreateReplyCommentUseCase', () => {
     );
 
     // Assert
-    expect(createdComment).toStrictEqual(mockCreatedReply);
+    expect(createdComment).toStrictEqual(
+      new CreatedComment({
+        id: 'reply-123',
+        content: useCasePayload.content,
+        user_id: useCasePayload.user_id,
+      })
+    );
 
     expect(mockCommentRepository.validateThreadExist).toHaveBeenCalledWith(
       useCasePayload.thread_id

@@ -53,6 +53,11 @@ describe('ViewThreadByIdUseCase', () => {
 
     // Assert
     expect(viewThreadById).toBeDefined();
-    expect(new DetailThread(viewThreadById)).toStrictEqual(expectedDetailThread);
+    expect(new DetailThread(viewThreadById)).toStrictEqual(
+      expectedDetailThread
+    );
+
+    expect(mockThreadRepository.viewThreadById).toBeCalledWith('thread-123');
+    expect(mockThreadRepository.viewThreadById).toBeCalledTimes(1);
   });
 });

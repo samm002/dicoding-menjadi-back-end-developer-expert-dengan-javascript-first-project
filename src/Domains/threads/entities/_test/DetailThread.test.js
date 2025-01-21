@@ -38,7 +38,7 @@ describe('DetailThread entities', () => {
         content: 'A reply',
         is_deleted: false,
         parent_comment_id: 'comment-123',
-      }
+      },
     ];
 
     // Action
@@ -79,14 +79,16 @@ describe('DetailThread entities', () => {
         content: 'A comment',
         is_deleted: true,
         parent_comment_id: null,
-      }
+      },
     ];
 
     // Action
     const detailThread = new DetailThread(payload);
 
     // Assert
-    expect(detailThread.comments[0].content).toEqual('**komentar telah dihapus**');
+    expect(detailThread.comments[0].content).toEqual(
+      '**komentar telah dihapus**'
+    );
   });
 
   it('should show deleted reply text when reply is deleted', () => {
@@ -118,14 +120,16 @@ describe('DetailThread entities', () => {
         content: 'A reply',
         is_deleted: true,
         parent_comment_id: 'comment-123',
-      }
+      },
     ];
 
     // Action
     const detailThread = new DetailThread(payload);
 
     // Assert
-    expect(detailThread.comments[0].replies[0].content).toEqual('**balasan telah dihapus**');
+    expect(detailThread.comments[0].replies[0].content).toEqual(
+      '**balasan telah dihapus**'
+    );
   });
 
   it('should throw error when payload did not contain needed property', () => {
@@ -136,11 +140,13 @@ describe('DetailThread entities', () => {
         body: 'Thread body', // missing title
         updated_at: '2025-01-20T07:00:00.000Z',
         username: 'user-123',
-      }
+      },
     ];
 
     // Action & Assert
-    expect(() => new DetailThread(payload)).toThrowError('DETAIL_THREAD.NOT_CONTAIN_NEEDED_PROPERTY');
+    expect(() => new DetailThread(payload)).toThrowError(
+      'DETAIL_THREAD.NOT_CONTAIN_NEEDED_PROPERTY'
+    );
   });
 
   it('should throw error when payload did not meet data type specification', () => {
@@ -152,11 +158,13 @@ describe('DetailThread entities', () => {
         body: 'Thread body',
         updated_at: '2025-01-20T07:00:00.000Z',
         username: 'user-123',
-      }
+      },
     ];
 
     // Action & Assert
-    expect(() => new DetailThread(payload)).toThrowError('DETAIL_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
+    expect(() => new DetailThread(payload)).toThrowError(
+      'DETAIL_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION'
+    );
   });
 
   it('should throw error when comment has invalid properties (comment id)', () => {
@@ -175,15 +183,17 @@ describe('DetailThread entities', () => {
         id: 'thread-123',
         comment_id: 123, // invalid comment id
         comment_username: 'user-abc',
-        comment_date: 'invalid-date', 
+        comment_date: 'invalid-date',
         content: 'A comment',
         is_deleted: false,
         parent_comment_id: null,
-      }
+      },
     ];
 
     // Action & Assert
-    expect(() => new DetailThread(payload)).toThrowError('DETAIL_THREAD.INVALID_COMMENT_ID');
+    expect(() => new DetailThread(payload)).toThrowError(
+      'DETAIL_THREAD.INVALID_COMMENT_ID'
+    );
   });
 
   it('should throw error when comment has invalid properties (comment content)', () => {
@@ -202,15 +212,17 @@ describe('DetailThread entities', () => {
         id: 'thread-123',
         comment_id: 'comment-123',
         comment_username: 'user-abc',
-        comment_date: 'invalid-date', 
+        comment_date: 'invalid-date',
         content: 123, // invalid comment content
         is_deleted: false,
         parent_comment_id: null,
-      }
+      },
     ];
 
     // Action & Assert
-    expect(() => new DetailThread(payload)).toThrowError('DETAIL_THREAD.INVALID_COMMENT_CONTENT');
+    expect(() => new DetailThread(payload)).toThrowError(
+      'DETAIL_THREAD.INVALID_COMMENT_CONTENT'
+    );
   });
 
   it('should throw error when comment has invalid properties (comment username)', () => {
@@ -229,15 +241,17 @@ describe('DetailThread entities', () => {
         id: 'thread-123',
         comment_id: 'comment-123',
         comment_username: 123, // invalid comment username
-        comment_date: 'invalid-date', 
+        comment_date: 'invalid-date',
         content: 'A comment',
         is_deleted: false,
         parent_comment_id: null,
-      }
+      },
     ];
 
     // Action & Assert
-    expect(() => new DetailThread(payload)).toThrowError('DETAIL_THREAD.INVALID_COMMENT_USERNAME');
+    expect(() => new DetailThread(payload)).toThrowError(
+      'DETAIL_THREAD.INVALID_COMMENT_USERNAME'
+    );
   });
 
   it('should throw error when comment has invalid properties (comment date)', () => {
@@ -260,11 +274,13 @@ describe('DetailThread entities', () => {
         content: 'A comment',
         is_deleted: false,
         parent_comment_id: null,
-      }
+      },
     ];
 
     // Action & Assert
-    expect(() => new DetailThread(payload)).toThrowError('DETAIL_THREAD.INVALID_COMMENT_DATE');
+    expect(() => new DetailThread(payload)).toThrowError(
+      'DETAIL_THREAD.INVALID_COMMENT_DATE'
+    );
   });
 
   it('should throw error when reply has invalid properties (reply id)', () => {
@@ -296,11 +312,13 @@ describe('DetailThread entities', () => {
         content: 'First reply',
         is_deleted: false,
         parent_comment_id: 'comment-123',
-      }
+      },
     ];
 
     // Action & Assert
-    expect(() => new DetailThread(payload)).toThrowError('DETAIL_THREAD.INVALID_REPLY_ID');
+    expect(() => new DetailThread(payload)).toThrowError(
+      'DETAIL_THREAD.INVALID_REPLY_ID'
+    );
   });
 
   it('should throw error when reply has invalid properties (reply content)', () => {
@@ -326,17 +344,19 @@ describe('DetailThread entities', () => {
       },
       {
         id: 'thread-123',
-        comment_id: 'reply-123', 
+        comment_id: 'reply-123',
         comment_username: 'user-xyz',
         comment_date: '2025-01-20T07:02:00.000Z',
         content: 123, // invalid content
         is_deleted: false,
         parent_comment_id: 'comment-123',
-      }
+      },
     ];
 
     // Action & Assert
-    expect(() => new DetailThread(payload)).toThrowError('DETAIL_THREAD.INVALID_REPLY_CONTENT');
+    expect(() => new DetailThread(payload)).toThrowError(
+      'DETAIL_THREAD.INVALID_REPLY_CONTENT'
+    );
   });
 
   it('should throw error when reply has invalid properties (reply username)', () => {
@@ -362,17 +382,19 @@ describe('DetailThread entities', () => {
       },
       {
         id: 'thread-123',
-        comment_id: 'reply-123', 
+        comment_id: 'reply-123',
         comment_username: 123, // invalid username
         comment_date: '2025-01-20T07:02:00.000Z',
         content: 'First reply',
         is_deleted: false,
         parent_comment_id: 'comment-123',
-      }
+      },
     ];
 
     // Action & Assert
-    expect(() => new DetailThread(payload)).toThrowError('DETAIL_THREAD.INVALID_REPLY_USERNAME');
+    expect(() => new DetailThread(payload)).toThrowError(
+      'DETAIL_THREAD.INVALID_REPLY_USERNAME'
+    );
   });
 
   it('should throw error when reply has invalid properties (reply date)', () => {
@@ -398,17 +420,19 @@ describe('DetailThread entities', () => {
       },
       {
         id: 'thread-123',
-        comment_id: 'reply-123', 
+        comment_id: 'reply-123',
         comment_username: 'user-123',
         comment_date: 'invalid date', // invalid date
         content: 'First reply',
         is_deleted: false,
         parent_comment_id: 'comment-123',
-      }
+      },
     ];
 
     // Action & Assert
-    expect(() => new DetailThread(payload)).toThrowError('DETAIL_THREAD.INVALID_REPLY_DATE');
+    expect(() => new DetailThread(payload)).toThrowError(
+      'DETAIL_THREAD.INVALID_REPLY_DATE'
+    );
   });
 
   it('should handle nested replies correctly', () => {
@@ -449,7 +473,7 @@ describe('DetailThread entities', () => {
         content: 'Nested reply',
         is_deleted: false,
         parent_comment_id: 'reply-123',
-      }
+      },
     ];
 
     // Action
@@ -458,7 +482,9 @@ describe('DetailThread entities', () => {
     // Assert
     expect(detailThread.comments[0].replies).toHaveLength(1);
     expect(detailThread.comments[0].replies[0].replies).toHaveLength(1);
-    expect(detailThread.comments[0].replies[0].replies[0].content).toEqual('Nested reply');
+    expect(detailThread.comments[0].replies[0].replies[0].content).toEqual(
+      'Nested reply'
+    );
   });
 
   it('should handle empty comments correctly', () => {
@@ -472,7 +498,7 @@ describe('DetailThread entities', () => {
         username: 'user-123',
         comment_id: null,
         parent_comment_id: null,
-      }
+      },
     ];
 
     // Action
@@ -480,5 +506,63 @@ describe('DetailThread entities', () => {
 
     // Assert
     expect(detailThread.comments).toHaveLength(0);
+  });
+
+  it('should not throw error when comment does not have replies property', () => {
+    // Arrange
+    const payload = [
+      {
+        id: 'thread-123',
+        title: 'A Thread',
+        body: 'Thread body',
+        updated_at: '2025-01-20T07:00:00.000Z',
+        username: 'user-123',
+        comment_id: null,
+        parent_comment_id: null,
+      },
+    ];
+
+    const detailThread = new DetailThread(payload);
+
+    // Action & Assert
+    // Should not throw error when replies property is undefined
+    expect(() => {
+      detailThread._verifyComment({
+        id: 'comment-123',
+        username: 'user-abc',
+        date: '2025-01-20T07:01:00.000Z',
+        content: 'A comment',
+        // replies property is not defined
+      });
+    }).not.toThrow();
+  });
+
+  it('should not throw error when reply does not have replies property', () => {
+    // Arrange
+    const payload = [
+      {
+        id: 'thread-123',
+        title: 'A Thread',
+        body: 'Thread body',
+        updated_at: '2025-01-20T07:00:00.000Z',
+        username: 'user-123',
+        comment_id: null,
+        parent_comment_id: null,
+      },
+    ];
+
+    const detailThread = new DetailThread(payload);
+
+    // Action & Assert
+    // Should not throw error when replies property is undefined
+    expect(() => {
+      detailThread._verifyReply({
+        id: 'reply-123',
+        username: 'user-xyz',
+        date: '2025-01-20T07:02:00.000Z',
+        content: 'A reply',
+        // replies property is not defined
+      });
+    }).not.toThrow();
   });
 });

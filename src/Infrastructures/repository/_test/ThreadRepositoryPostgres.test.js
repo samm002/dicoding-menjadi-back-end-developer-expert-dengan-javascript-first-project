@@ -46,7 +46,7 @@ describe('ThreadRepositoryPostgres', () => {
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {
         generateId: threadFakeIdGenerator,
       });
-      
+
       // Action
       await threadRepositoryPostgres.createThread(createThread);
 
@@ -134,14 +134,15 @@ describe('ThreadRepositoryPostgres', () => {
 
       await threadRepositoryPostgres.createThread(createThread);
 
-      const expectedCreatedThread = new DetailThread({
-        id: 'thread-123',
-        title: 'Thread 1',
-        body: 'Isi dari Thread 1',
-        updated_at: '2025-01-08 10:30:26.511437',
-        username: 'dicoding',
-        comments: [],
-      });
+      const expectedCreatedThread = new DetailThread([
+        {
+          id: 'thread-123',
+          title: 'Thread 1',
+          body: 'Isi dari Thread 1',
+          updated_at: '2025-01-08 10:30:26.511437',
+          username: 'dicoding',
+        },
+      ]);
 
       // Action
       const threadDetail = await threadRepositoryPostgres.viewThreadById(
@@ -154,6 +155,7 @@ describe('ThreadRepositoryPostgres', () => {
       const threads = await ThreadsTableTestHelper.findThreadsById(
         'thread-123'
       );
+
       expect(threads).toHaveLength(1);
       expect(threadDetail).toBeDefined();
       expect(threadDetail).toStrictEqual(expectedCreatedThread);

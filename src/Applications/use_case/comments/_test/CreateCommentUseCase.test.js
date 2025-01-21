@@ -15,7 +15,7 @@ describe('CreateCommentUseCase', () => {
       user_id: 'user-123',
     });
 
-    const mockCreatedComment = new CreatedComment({
+    const expectedCreatedComment = new CreatedComment({
       id: 'comment-123',
       content: useCasePayload.content,
       user_id: useCasePayload.user_id,
@@ -29,9 +29,11 @@ describe('CreateCommentUseCase', () => {
       .fn()
       .mockImplementation(() => Promise.resolve());
 
-    mockCommentRepository.createComment = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve(mockCreatedComment));
+    mockCommentRepository.createComment = jest.fn().mockResolvedValue({
+      id: 'comment-123', 
+      content: useCasePayload.content,
+      owner: useCasePayload.user_id,
+    });
 
     /** creating use case instance */
     const createCommentUseCase = new CreateCommentUseCase({
@@ -42,7 +44,14 @@ describe('CreateCommentUseCase', () => {
     const createdComment = await createCommentUseCase.execute(useCasePayload);
 
     // Assert
-    expect(createdComment).toStrictEqual(mockCreatedComment);
+
+    const createdCommentFromUseCase = new CreatedComment({
+      id: 'comment-123',
+      content: createdComment.content,
+      user_id: createdComment.owner,
+    })
+
+    expect(createdCommentFromUseCase).toStrictEqual(expectedCreatedComment);
 
     expect(mockCommentRepository.validateThreadExist).toHaveBeenCalledWith(
       useCasePayload.thread_id

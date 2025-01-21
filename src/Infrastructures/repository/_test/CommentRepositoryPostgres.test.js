@@ -191,6 +191,18 @@ describe('CommentRepositoryPostgres', () => {
 
       expect(comment[0].is_deleted).toBe(true);
     });
+    it('should return not found when delete invalid comment', async () => {
+      // Arrange
+      const commentFakeIdGenerator = jest.fn(() => 'comment-123'); // mock
+      const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {
+        generateId: commentFakeIdGenerator,
+      });
+
+      // Action & Assert
+      await expect(
+        commentRepositoryPostgres.deleteComment('comment-456')
+      ).rejects.toThrowError(NotFoundError);
+    });
   });
 
   describe('createReply function', () => {
@@ -451,9 +463,8 @@ describe('CommentRepositoryPostgres', () => {
         commentRepositoryPostgres.validateCommentExist('comment-456')
       ).rejects.toThrowError(NotFoundError);
 
-      const invalidCommentSearch = await CommentsTableTestHelper.findCommentsById(
-        'comment-456'
-      );
+      const invalidCommentSearch =
+        await CommentsTableTestHelper.findCommentsById('comment-456');
       expect(invalidCommentSearch).toHaveLength(0);
     });
   });
@@ -505,12 +516,18 @@ describe('CommentRepositoryPostgres', () => {
       // Action & Assert
       // Valid comment owner
       await expect(
-        commentRepositoryPostgres.validateCommentOwner('comment-123', 'user-123')
+        commentRepositoryPostgres.validateCommentOwner(
+          'comment-123',
+          'user-123'
+        )
       ).resolves.not.toThrowError(AuthorizationError);
 
       // Invalid comment owner
       await expect(
-        commentRepositoryPostgres.validateCommentOwner('comment-123', 'user-456')
+        commentRepositoryPostgres.validateCommentOwner(
+          'comment-123',
+          'user-456'
+        )
       ).rejects.toThrowError(AuthorizationError);
     });
   });

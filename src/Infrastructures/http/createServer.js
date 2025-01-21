@@ -38,6 +38,7 @@ const createServer = async (container) => {
     }),
   });
 
+  // Should be uncovered in test because still not implemented
   server.auth.strategy('refresh_jwt', 'jwt', {
     keys: process.env.REFRESH_TOKEN_KEY,
     verify: {
@@ -78,7 +79,7 @@ const createServer = async (container) => {
     const { response } = request;
 
     if (response instanceof Error) {
-      console.log(response)
+      // console.log(response)
       // bila response tersebut error, tangani sesuai kebutuhan
       const translatedError = DomainErrorTranslator.translate(response);
 

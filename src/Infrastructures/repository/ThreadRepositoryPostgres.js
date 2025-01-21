@@ -8,8 +8,6 @@ class ThreadRepositoryPostgres extends ThreadRepository {
     super();
     this._pool = pool;
     this._utils = utils;
-    this._deletedComment = '**komentar telah dihapus**';
-    this._deletedReplyComment = '**balasan telah dihapus**';
   }
 
   async createThread(payload) {
@@ -54,40 +52,7 @@ class ThreadRepositoryPostgres extends ThreadRepository {
       throw new NotFoundError('thread tidak ditemukan');
     }
 
-    const getReplies = (parentCommentId) => {
-      return result.rows
-        .filter((row) => row.parent_comment_id === parentCommentId)
-        .map((row) => ({
-          id: row.comment_id,
-          username: row.comment_username,
-          date: row.comment_date,
-          content:
-            row.is_deleted === false ? row.content : this._deletedReplyComment,
-          replies: getReplies(row.comment_id),
-        }));
-    };
-
-    const thread = {
-      id: result.rows[0].id,
-      title: result.rows[0].title,
-      body: result.rows[0].body,
-      updated_at: result.rows[0].updated_at,
-      username: result.rows[0].username,
-      comments: result.rows
-        .filter(
-          (row) => row.comment_id !== null && row.parent_comment_id === null
-        )
-        .map((row) => ({
-          id: row.comment_id,
-          username: row.comment_username,
-          date: row.comment_date,
-          content:
-            row.is_deleted === false ? row.content : this._deletedComment,
-          replies: getReplies(row.comment_id),
-        })),
-    };
-
-    return new DetailThread(thread);
+    return new DetailThread(result.rows);
   }
 }
 

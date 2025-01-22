@@ -5,7 +5,7 @@ const ThreadRepository = require('../../../../Domains/threads/ThreadRepository')
 describe('ViewThreadByIdUseCase', () => {
   it('should view thread detail correctly', async () => {
     // Arrange
-    const expectedDetailThread = new DetailThread([
+    const threadData = [
       {
         id: 'thread-123',
         title: 'Thread 1',
@@ -19,12 +19,15 @@ describe('ViewThreadByIdUseCase', () => {
         is_deleted: null,
         parent_comment_id: null,
       },
-    ]);
+    ];
+
+    const mockDetailThread = new DetailThread(threadData);
+    const expectedDetailThread = new DetailThread(threadData);
 
     const mockThreadRepository = new ThreadRepository();
     mockThreadRepository.viewThreadById = jest
       .fn()
-      .mockImplementation(() => Promise.resolve(expectedDetailThread));
+      .mockImplementation(() => Promise.resolve(mockDetailThread));
 
     const viewThreadByIdUseCase = new ViewThreadByIdUseCase({
       threadRepository: mockThreadRepository,
@@ -33,14 +36,9 @@ describe('ViewThreadByIdUseCase', () => {
     // Action
     const viewThreadById = await viewThreadByIdUseCase.execute('thread-123');
 
-    console.log(viewThreadById);
-    console.log(expectedDetailThread);
-
     // Assert
     expect(viewThreadById).toBeDefined();
-    expect(viewThreadById).toStrictEqual(
-      expectedDetailThread
-    );
+    expect(viewThreadById).toStrictEqual(expectedDetailThread);
 
     expect(mockThreadRepository.viewThreadById).toBeCalledWith('thread-123');
     expect(mockThreadRepository.viewThreadById).toBeCalledTimes(1);
